@@ -1,0 +1,86 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FaceIt</title>
+    <link rel="stylesheet" href="/wwwroot/css/mystyles.css">
+    <script type=module src=/wwwroot/js/main.js></script>
+    <script src="/wwwroot/js/login.js"></script>
+</head>
+
+<body>
+  <my-header></my-header>
+
+    <div class="container mt-5 mb-5">
+      <div class="columns is-centered">
+        <div class="column is-half">
+          <div class="card">
+            <div class="card-content">
+              <h1 class="title is-4 has-text-centered">Login</h1>
+              <form>
+                <div class="field">
+                  <label class="label">Email</label>
+                  <div class="control">
+                    <input class="input" type="email" placeholder="Email">
+                  </div>
+                </div>
+                <div class="field">
+                  <label class="label">Password</label>
+                  <div class="control">
+                    <input class="input" type="password" placeholder="Password">
+                  </div>
+                </div>
+                <div class="field">
+                  <div class="control">
+                    <button class="button is-primary is-fullwidth">Login</button>
+                  </div>
+                  <div id="error"></div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>   
+      const form = document.querySelector('form');
+      const emailInput = document.querySelector('input[type="email"]');
+      const passwordInput = document.querySelector('input[type="password"]');
+      const errorDiv = document.querySelector('#error');
+      if (errorDiv) {
+        errorDiv.textContent = 'Error occurred: ' + error.message;
+}
+
+      form.addEventListener('submit', (event) => {
+        event.preventDefault();
+
+        const email = emailInput.value;
+        const password = passwordInput.value;
+
+        //const apiUrl = `https://${window.location.hostname}:5001/api/idbyemailandpasswords?email=${email}&pass=${password}`;
+
+        const apiUrl = `https://localhost:7200/api/idbyemailandpasswords?email=${email}&pass=${password}`;
+        
+
+        fetch(apiUrl)
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('Network response was not ok');
+            }
+            return response.json();
+          })
+          .then(data => {
+            localStorage.setItem('userId', data[0].userId);
+            window.location.href = '/'; // Redirect to homepage or some other page
+          })
+          .catch(error => {
+            console.error(error);
+            errorDiv.textContent = 'Error occurred: ' + error.message;
+          });
+      });
+    </script>
+    <my-footer></my-footer>
+
+  </body>
+</html>
